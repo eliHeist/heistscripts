@@ -1,0 +1,82 @@
+dte(){
+	# icons depend on nerdfonts being installed
+	clock=$(date '+%I')
+
+	case "$clock" in
+    	"00") icon="󱑊" ;;
+    	"01") icon="󱐿" ;;
+    	"02") icon="󱑀" ;;
+    	"03") icon="󱑁" ;;
+    	"04") icon="󱑂" ;;
+    	"05") icon="󱑃" ;;
+    	"06") icon="󱑄" ;;
+    	"07") icon="󱑅" ;;
+    	"08") icon="󱑆" ;;
+    	"09") icon="󱑇" ;;
+    	"10") icon="󱑈" ;;
+    	"11") icon="󱑉" ;;
+    	"12") icon="󱑊" ;;
+	esac
+
+	echo "$icon $(date "+%I:%M%p - %a. %d %b %Y")"
+}
+
+vol() {
+    # Get the mute status and volume level using amixer and awk
+    vol_info=$(amixer -D pulse get Master | awk -F'[][]' 'END{print $4":"$2}')
+    mute_status=$(echo "$vol_info" | cut -d ':' -f 1)
+    volume_level=$(echo "$vol_info" | cut -d ':' -f 2 | tr -d '%')
+
+    # Check the mute status and volume levels to give different outputs
+    if [ "$mute_status" = "off" ]; then
+        echo ""
+    elif [ "$volume_level" -lt 50 ]; then
+		echo " $volume_level"
+    else
+        echo "  $volume_level"
+    fi
+}
+
+get_wifi_status() {
+    # Check if any wireless interface is up
+    local wifi_status=$(nmcli -t -f WIFI g)
+    
+    if [ "$wifi_status" = "enabled" ]; then
+        # Get the signal strength in percentage
+        local signal_strength=$(nmcli -t -f IN-USE,SIGNAL dev wifi | grep '*' | awk -F: '{print $2}')
+
+        # Check if signal strength is empty (not connected)
+        if [ -z "$signal_strength" ]; then
+            echo "󰤮"
+        else
+			# Use if-elif to categorize signal strength
+            if [ "$signal_strength" -lt 20 ]; then
+                echo "󰤯 $signal_strength"
+            elif [ "$signal_strength" -lt 40 ]; then
+                echo "󰤟 $signal_strength"
+            elif [ "$signal_strength" -lt 60 ]; then
+                echo "󰤢 $signal_strength"
+            elif [ "$signal_strength" -lt 80 ]; then
+                echo "󰤥 $signal_strength"
+            elif [ "$signal_strength" -le 100 ]; then
+                echo "󰤨 $signal_strength"
+            else
+                echo "$signal_strength"
+            fi
+        fi
+    else
+        echo "󰯡"
+    fi
+}
+
+
+
+status(){
+	echo "$(get_wifi_status)    $(vol)    $(dte)"
+}
+
+while true; do
+	xsetroot -name "$(status)"
+	sleep 0.1
+done
+
