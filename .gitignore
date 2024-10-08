@@ -1,0 +1,5 @@
+# Ignore config.h and all .orig and .rej files in the dwm folder
+dwm/config.h
+dwm/*.orig
+dwm/*.rej
+
