@@ -4,7 +4,7 @@
 
 
 # BACKGROUND-IMAGE
-title-text: ""
+title-text: "eliHeist"
 desktop-image: "boot_wallpaper.png"
 
 
@@ -20,12 +20,13 @@ terminal-font: "Hack Bold 18"
 	top = 550
 	width = 500
 	height = 100%
+	title_color = "#D1D3D2"
 	item_font = "Roboto Regular 27"
 	item_color = "#D1D3D2"
         selected_item_color = "#D1D3D2"
-        item_padding = 5
-        item_height = 28
-        item_spacing = 80
+        item_padding = 10
+        item_height = 58
+        item_spacing = 20
         selected_item_pixmap_style = "select_*.png"
 
 
